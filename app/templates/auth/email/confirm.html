@@ -1,0 +1,16 @@
+ <p> <b>{{ user.username }}</b> 님.</p>
+ <br>
+ <p>
+ Flasky 가입을 축하드립니다!
+ </p>
+ <p>
+ 계정 확인을 위해 아래 링크를 클릭해 주시기 바랍니다. :
+ </p>
+<p><b>
+<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">{{ url_for('auth.confirm', token=token, _external=True) }}</a>
+</b></p>
+ <p>감사합니다.</p>
+ <p>
+ Flasky Team
+ </p>
+<p>주의: 이 메일 주소는 수신용이 아니므로, 직접 응답하지 마시기 바랍니다.</p> 

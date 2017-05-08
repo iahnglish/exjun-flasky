@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky - {{ user.username }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
+	<div class="profile-header">
+    <h1>{{ user.username }}</h1>
+    {% if user.name or user.location %}
+    <p>
+        {% if user.name %}이름: {{ user.name }},{% endif %}
+        {% if user.location %}
+            위치: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+        {% endif %}
+    </p>
+    {% endif %}
+    {% if current_user.is_administrator() %}
+    <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+    {% endif %}
+    {% if user.about_me %}<p>자기 소개: {{ user.about_me }}</p>{% endif %}
+    <p>회원가입 날짜: {{ moment(user.member_since).format('LLL') }}. 최근 접속시간 {{ moment(user.last_seen).fromNow() }}.</p>
+    <p>{% if user == current_user %}
+    <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">프로파일 수정</a>
+    {% endif %}
+    {% if current_user.is_administrator() %}
+    <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">프로파일 수정[Admin]</a>
+    {% endif %}
+	</p>
+	{% if current_user.can(Permission.FOLLOW) and user != current_user %}
+		{% if not current_user.is_following(user) %}
+		<a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">Follow</a>
+		{% else %}
+		<a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default">Unfollow</a>
+		{% endif %}
+	{% endif %}
+	<a href="{{ url_for('.followers', username=user.username) }}">팔로워 수:</a> <span class="badge">{{ user.followers.count() - 1 }}</span>
+	
+	<a href="{{ url_for('.followed_by', username=user.username) }}">팔로윙 수:</a> <span class="badge">{{ user.followed.count() - 1  }}</span>
+	
+	{% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %} | <span class="label label-default">본인을 팔로우 중</span>
+	{% endif %}
+	</div>
+</div>
+<h3> {{ user.username }} 님의 포스트</h3>
+{% include '_posts.html' %}
+{% endblock %}

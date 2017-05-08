@@ -1,0 +1,7 @@
+{{ user.username }}님
+새로운 이메일 주소 확인을 위해 <a href="{{ url_for('auth.change_email', token=token, _external=True) }}">여기를 클릭</a>하시거나,
+아래 링크를 브라우저 주소창에 붙여 넣어 이동하시기 바랍니다.:
+{{ url_for('auth.change_email', token=token, _external=True) }}
+감사합니다.
+Flasky Team
+주의: 이 메일 주소는 수신용이 아니므로, 직접 응답하지 마시기 바랍니다.
